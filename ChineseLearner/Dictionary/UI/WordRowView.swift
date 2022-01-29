@@ -17,11 +17,29 @@ struct WordRowView: View {
     }
 
     var body: some View {
-
-        VStack(alignment: .leading) {
-            Text(viewModel.chinese)
-            Text(viewModel.pinyin)
-            Text(viewModel.english)
+        HStack {
+            HStack {
+                Text(viewModel.english)
+                    .frame(alignment: .leading)
+                Spacer()
+                Divider()
+            }
+            .frame(maxWidth: .infinity)
+            HStack {
+                Spacer()
+                Text(viewModel.chinese)
+                Spacer()
+                Divider()
+            }
+            .frame(maxWidth: .infinity)
+            HStack {
+                Spacer()
+                Text(viewModel.pinyin)
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
         }
+        .frame(maxWidth: .infinity)
+        .padding(4)
     }
 }

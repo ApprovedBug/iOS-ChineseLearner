@@ -57,8 +57,11 @@ struct DictionaryView: View {
             .navigationBarTitle("Your dictionary")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add word") {
+                    Button(action: {
                         viewModel.addTapped()
+                    }) {
+                        Image(systemName: "plus.circle")
+                            .foregroundColor(.red)
                     }
                 }
             }

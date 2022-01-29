@@ -17,7 +17,7 @@ final class WordMO: NSManagedObject {
 extension WordMO {
     static var all: NSFetchRequest<WordMO> {
         let request = WordMO.fetchRequest()
-        request.sortDescriptors = []
+        request.sortDescriptors = [NSSortDescriptor(key: "english", ascending: true)]
         return request as! NSFetchRequest<WordMO>
     }
 }

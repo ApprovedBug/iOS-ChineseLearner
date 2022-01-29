@@ -21,9 +21,9 @@ struct AddWordView: View {
 
         VStack {
             Form {
-                TextField("Enter Chinese", text: $viewModel.chinese)
-                TextField("Enter Pinyin", text: $viewModel.pinyin)
-                TextField("Enter English", text: $viewModel.english)
+                TextField("Chinese", text: $viewModel.chinese)
+                TextField("Pinyin", text: $viewModel.pinyin)
+                TextField("English", text: $viewModel.english)
 
                 Button("Add word") {
                     viewModel.add()

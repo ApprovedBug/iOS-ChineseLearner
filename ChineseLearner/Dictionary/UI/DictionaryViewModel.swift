@@ -65,6 +65,24 @@ extension DictionaryViewModel {
         isShowingSheet = true
     }
 
+    func delete(from section: LetterSectionViewModel, at offsets: IndexSet) {
+
+        offsets.forEach { index in
+
+            let word = section.words[index]
+
+            do {
+                guard let wordToDelete = try viewContext.existingObject(with: word.id) as? WordMO else {
+                    return
+                }
+
+                viewContext.delete(wordToDelete)
+            } catch {
+
+            }
+        }
+    }
+
     fileprivate func displayFilteredWords(filter: String) {
 
         guard let words = fetchedResultsController.fetchedObjects else {

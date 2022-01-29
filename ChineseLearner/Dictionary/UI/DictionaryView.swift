@@ -32,15 +32,22 @@ struct DictionaryView: View {
                                 ForEach(section.words) { word in
                                     WordRowView(viewModel: word)
                                 }
+                                .onDelete { indexSet in
+                                    viewModel.delete(from: section, at: indexSet)
+                                }
                             }
                         } else {
                             ForEach(section.words) { word in
                                 WordRowView(viewModel: word)
                             }
+                            .onDelete { indexSet in
+                                viewModel.delete(from: section, at: indexSet)
+                            }
                         }
                     }
                     .searchable(text: $viewModel.searchText)
                     .listStyle(.insetGrouped)
+                    .animation(.default, value: 0.3)
                 case .empty:
                     Text("Add some words to your dictionary!")
                 case .failed(let error):

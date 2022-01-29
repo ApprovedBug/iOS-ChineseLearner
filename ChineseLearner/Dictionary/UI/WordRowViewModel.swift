@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 class WordRowViewModel: ObservableObject, Identifiable {
 
@@ -13,6 +14,10 @@ class WordRowViewModel: ObservableObject, Identifiable {
 
     init(word: WordMO) {
         self.word = word
+    }
+
+    var id: NSManagedObjectID {
+        return word.objectID
     }
 
     var chinese: String {

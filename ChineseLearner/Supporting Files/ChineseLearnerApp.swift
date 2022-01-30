@@ -17,6 +17,7 @@ struct ChineseLearnerApp: App {
 
             let dictionaryViewModel = DictionaryViewModel(viewContext: persistenceController.container.viewContext)
             let practiceViewModel = PracticeViewModel(viewContext: persistenceController.container.viewContext)
+            let resultsViewModel = ResultsViewModel(viewContext: persistenceController.container.viewContext)
 
             TabView {
                 DictionaryView(viewModel: dictionaryViewModel)
@@ -31,7 +32,7 @@ struct ChineseLearnerApp: App {
                         Text("Study")
                     }
 
-                AchievementsView()
+                ResultsView(viewModel: resultsViewModel)
                     .tabItem {
                         Image(systemName: "p.circle")
                         Text("Progress")

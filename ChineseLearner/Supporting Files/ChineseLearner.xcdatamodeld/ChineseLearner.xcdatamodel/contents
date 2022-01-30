@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G314" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Answer" representedClassName="AnswerMO" syncable="YES" codeGenerationType="class">
+        <attribute name="isCorrect" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="test" maxCount="1" deletionRule="Nullify" destinationEntity="Test" inverseName="answers" inverseEntity="Test"/>
+        <relationship name="word" maxCount="1" deletionRule="Nullify" destinationEntity="Word" inverseName="answer" inverseEntity="Word"/>
+    </entity>
+    <entity name="Test" representedClassName="TestMO" syncable="YES" codeGenerationType="class">
+        <attribute name="timeStamp" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="answers" toMany="YES" deletionRule="Nullify" destinationEntity="Answer" inverseName="test" inverseEntity="Answer"/>
+    </entity>
     <entity name="Word" representedClassName="WordMO" syncable="YES">
         <attribute name="chinese" attributeType="String" defaultValueString=""/>
         <attribute name="english" attributeType="String" defaultValueString=""/>
         <attribute name="pinyin" attributeType="String" defaultValueString=""/>
+        <relationship name="answer" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Answer" inverseName="word" inverseEntity="Answer"/>
     </entity>
     <elements>
-        <element name="Word" positionX="-63" positionY="-18" width="128" height="74"/>
+        <element name="Word" positionX="-63" positionY="-18" width="128" height="14"/>
+        <element name="Test" positionX="-63" positionY="9" width="128" height="59"/>
+        <element name="Answer" positionX="-54" positionY="18" width="128" height="74"/>
     </elements>
 </model>

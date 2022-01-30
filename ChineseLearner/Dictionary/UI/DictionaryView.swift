@@ -24,7 +24,7 @@ struct DictionaryView: View {
                         .onAppear(perform: viewModel.fetchWords)
                 case .loading:
                     ProgressView()
-                case .loaded(let letterSections):
+                case .ready(let letterSections):
                     loadedView(letterSections: letterSections)
                 case .empty:
                     Text("Add some words to your dictionary!")

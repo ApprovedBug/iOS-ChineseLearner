@@ -16,7 +16,7 @@ class DictionaryViewModel: NSObject, ObservableObject {
         case idle
         case loading
         case empty
-        case loaded([LetterSectionViewModel])
+        case ready([LetterSectionViewModel])
         case failed(Error)
     }
 
@@ -114,7 +114,7 @@ extension DictionaryViewModel {
                     )
                 }
             }
-            state = .loaded(letterSections)
+            state = .ready(letterSections)
         }
     }
 }

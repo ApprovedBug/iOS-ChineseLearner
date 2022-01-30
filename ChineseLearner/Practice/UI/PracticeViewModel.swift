@@ -17,7 +17,7 @@ class PracticeViewModel: NSObject, ObservableObject {
         case practiceReady(String)
         case practiceCorrect(String)
         case practiceIncorrect(String)
-        case summary
+        case summary(Int, Int)
     }
 
     @Published private(set) var state: State = .ready
@@ -29,6 +29,8 @@ class PracticeViewModel: NSObject, ObservableObject {
     private let fetchedResultsController: NSFetchedResultsController<WordMO>
     private var randomisedWords: [WordMO] = []
     private var disposables = Set<AnyCancellable>()
+    private var correctAnswerIndexes: [Int] = []
+    private var skippedQuestionIndexes: [Int] = []
 
     init(viewContext: NSManagedObjectContext) {
         self.viewContext = viewContext
@@ -49,9 +51,12 @@ class PracticeViewModel: NSObject, ObservableObject {
 
                 if value == 0 {
                     return
+                } else if value < self.randomisedWords.count {
+                    self.displayWord(index: value)
+                } else {
+                    self.endPractice()
                 }
-                
-                self.displayWord(index: value)
+
             })
             .store(in: &disposables)
     }
@@ -81,6 +86,7 @@ extension PracticeViewModel {
 
         if chineseAnswer == word.chinese && pinyinAnswer == word.pinyin {
             state = .practiceCorrect(word.english)
+            correctAnswerIndexes.append(currentWordIndex)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.currentWordIndex += 1
@@ -91,11 +97,23 @@ extension PracticeViewModel {
     }
 
     func skip() {
+        skippedQuestionIndexes.append(currentWordIndex)
         currentWordIndex += 1
     }
 
     func endPractice() {
-        state = .summary
+
+        currentWordIndex = 0
+
+        saveTestResult()
+
+        guard let words = fetchedResultsController.fetchedObjects else {
+            return
+        }
+
+        randomisedWords = words.shuffled()
+
+        state = .summary(correctAnswerIndexes.count, skippedQuestionIndexes.count)
     }
 
     func closeSummary() {
@@ -103,20 +121,30 @@ extension PracticeViewModel {
     }
 
     private func displayWord(index: Int) {
-        if index < randomisedWords.count {
-            chineseAnswer = ""
-            pinyinAnswer = ""
-            state = .practiceReady(randomisedWords[index].english)
-        } else {
-            currentWordIndex = 0
+        chineseAnswer = ""
+        pinyinAnswer = ""
+        state = .practiceReady(randomisedWords[index].english)
+    }
 
-            guard let words = fetchedResultsController.fetchedObjects else {
-                return
-            }
+    private func saveTestResult() {
+        var answers: [AnswerMO] = []
 
-            randomisedWords = words.shuffled()
-
-            endPractice()
+        for index in correctAnswerIndexes {
+            let answer = AnswerMO(context: viewContext)
+            answer.word = randomisedWords[index]
+            answer.isCorrect = true
+            answers.append(answer)
         }
+
+        for index in skippedQuestionIndexes {
+            let answer = AnswerMO(context: viewContext)
+            answer.word = randomisedWords[index]
+            answer.isCorrect = false
+            answers.append(answer)
+        }
+
+        let test = TestMO(context: viewContext)
+        test.addToAnswers(NSSet(array: answers))
+        test.timeStamp = Date()
     }
 }

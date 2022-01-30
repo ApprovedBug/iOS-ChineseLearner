@@ -8,7 +8,7 @@
 import CoreData
 
 @objc(WordMO)
-final class WordMO: NSManagedObject {
+final public class WordMO: NSManagedObject {
     @NSManaged var chinese: String
     @NSManaged var pinyin: String
     @NSManaged var english: String

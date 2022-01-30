@@ -28,8 +28,8 @@ struct PracticeView: View {
                     testView(question: question, success: true)
                 case .practiceIncorrect(let question):
                     testView(question: question, failed: true)
-                case .summary:
-                    summaryView
+                case .summary(let correctAnswers, let skippedQuestions):
+                    summaryView(correctAnswers: correctAnswers, skippedQuestions: skippedQuestions)
                 }
             }
             .navigationBarTitle("Practice")
@@ -94,18 +94,25 @@ extension PracticeView {
                 }
                 .buttonStyle(DarkGreyButtonStyle())
             }
+            .padding(EdgeInsets(top: 24, leading: 0, bottom: 0, trailing: 0))
             Spacer()
             .frame(maxWidth: .infinity)
         }
         .padding()
     }
 
-    private var summaryView: some View {
+    private func summaryView(correctAnswers: Int, skippedQuestions: Int) -> some View {
         VStack(alignment: .leading) {
-            Text("Summary")
-                .font(.title)
+            Spacer()
+            Text("Your score\n\(correctAnswers)/\(correctAnswers + skippedQuestions)")
+                .font(.system(size: 50))
+                .multilineTextAlignment(.center)
+                .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
+                .frame(maxWidth: .infinity)
             Text("Well done for studying today, see you again tomorrow!")
                 .padding(.top, 24)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
             Spacer()
             Button(action: viewModel.closeSummary) {
                 HStack {

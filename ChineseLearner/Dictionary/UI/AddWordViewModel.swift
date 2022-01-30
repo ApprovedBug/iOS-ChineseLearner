@@ -40,7 +40,7 @@ extension AddWordViewModel {
         let word = WordMO(context: viewContext)
         word.chinese = chinese
         word.pinyin = pinyin
-        word.english = english
+        word.english = english.lowercased()
 
         state = .complete
     }

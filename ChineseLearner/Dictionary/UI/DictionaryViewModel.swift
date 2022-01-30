@@ -10,7 +10,7 @@ import CoreData
 import Combine
 import SwiftUI
 
-class DictionaryViewModel: NSObject, ObservableObject, Identifiable {
+class DictionaryViewModel: NSObject, ObservableObject {
 
     enum State {
         case idle
@@ -23,6 +23,7 @@ class DictionaryViewModel: NSObject, ObservableObject, Identifiable {
     @Published private(set) var state = State.idle
     @Published var isShowingSheet = false
     @Published var searchText: String = ""
+    @Published var wordCount: Int = 0
 
     private(set) var viewContext: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<WordMO>
@@ -42,7 +43,7 @@ class DictionaryViewModel: NSObject, ObservableObject, Identifiable {
         $searchText
             .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
             .sink(receiveValue: { filter in
-                self.displayFilteredWords(filter: filter)
+                self.displayFilteredWords()
             })
             .store(in: &disposables)
     }
@@ -55,7 +56,7 @@ extension DictionaryViewModel {
         do {
             try fetchedResultsController.performFetch()
 
-            displayFilteredWords(filter: searchText)
+            displayFilteredWords()
         } catch {
             state = .failed(error)
         }
@@ -83,11 +84,13 @@ extension DictionaryViewModel {
         }
     }
 
-    fileprivate func displayFilteredWords(filter: String) {
+    private func displayFilteredWords() {
 
         guard let words = fetchedResultsController.fetchedObjects else {
             return
         }
+
+        wordCount = words.count
 
         let filterdWords = searchText.isEmpty ? words : words.filter { $0.english.starts(with: searchText) }
 
@@ -119,6 +122,6 @@ extension DictionaryViewModel {
 extension DictionaryViewModel: NSFetchedResultsControllerDelegate {
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        displayFilteredWords(filter: searchText)
+        displayFilteredWords()
     }
 }

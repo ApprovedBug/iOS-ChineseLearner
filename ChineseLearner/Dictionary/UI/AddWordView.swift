@@ -24,6 +24,7 @@ struct AddWordView: View {
                 TextField("Chinese", text: $viewModel.chinese)
                 TextField("Pinyin", text: $viewModel.pinyin)
                 TextField("English", text: $viewModel.english)
+                    .autocapitalization(.none)
 
                 Button("Add word") {
                     viewModel.add()

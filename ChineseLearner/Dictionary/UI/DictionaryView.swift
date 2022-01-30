@@ -25,29 +25,7 @@ struct DictionaryView: View {
                 case .loading:
                     ProgressView()
                 case .loaded(let letterSections):
-                    List(letterSections) { section in
-
-                        if letterSections.count > 1 {
-                            Section(header: Text(section.letter)) {
-                                ForEach(section.words) { word in
-                                    WordRowView(viewModel: word)
-                                }
-                                .onDelete { indexSet in
-                                    viewModel.delete(from: section, at: indexSet)
-                                }
-                            }
-                        } else {
-                            ForEach(section.words) { word in
-                                WordRowView(viewModel: word)
-                            }
-                            .onDelete { indexSet in
-                                viewModel.delete(from: section, at: indexSet)
-                            }
-                        }
-                    }
-                    .searchable(text: $viewModel.searchText)
-                    .listStyle(.insetGrouped)
-                    .animation(.default, value: 0.3)
+                    loadedView(letterSections: letterSections)
                 case .empty:
                     Text("Add some words to your dictionary!")
                 case .failed(let error):
@@ -74,6 +52,40 @@ struct DictionaryView: View {
                     )
                 }
             }
+        }
+    }
+}
+
+extension DictionaryView {
+    private func loadedView(letterSections: [LetterSectionViewModel]) -> some View {
+        VStack(alignment: .leading) {
+            Text("\(viewModel.wordCount) words")
+                .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 0))
+                .foregroundColor(Color(red: 0.5, green: 0.5, blue: 0.5))
+                .font(.footnote)
+            List(letterSections) { section in
+
+                if letterSections.count > 1 {
+                    Section(header: Text(section.letter)) {
+                        ForEach(section.words) { word in
+                            WordRowView(viewModel: word)
+                        }
+                        .onDelete { indexSet in
+                            viewModel.delete(from: section, at: indexSet)
+                        }
+                    }
+                } else {
+                    ForEach(section.words) { word in
+                        WordRowView(viewModel: word)
+                    }
+                    .onDelete { indexSet in
+                        viewModel.delete(from: section, at: indexSet)
+                    }
+                }
+            }
+            .searchable(text: $viewModel.searchText)
+            .listStyle(.insetGrouped)
+            .animation(.default, value: 0.3)
         }
     }
 }

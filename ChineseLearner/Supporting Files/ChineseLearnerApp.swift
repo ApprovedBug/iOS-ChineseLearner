@@ -15,9 +15,28 @@ struct ChineseLearnerApp: App {
     var body: some Scene {
         WindowGroup {
 
-            let viewModel = DictionaryViewModel(viewContext: persistenceController.container.viewContext)
+            let dictionaryViewModel = DictionaryViewModel(viewContext: persistenceController.container.viewContext)
+            let practiceViewModel = PracticeViewModel(viewContext: persistenceController.container.viewContext)
 
-            DictionaryView(viewModel: viewModel)
+            TabView {
+                DictionaryView(viewModel: dictionaryViewModel)
+                    .tabItem {
+                        Image(systemName: "house.fill")
+                        Text("Home")
+                    }
+
+                PracticeView(viewModel: practiceViewModel)
+                    .tabItem {
+                        Image(systemName: "book")
+                        Text("Study")
+                    }
+
+                AchievementsView()
+                    .tabItem {
+                        Image(systemName: "p.circle")
+                        Text("Progress")
+                    }
+            }
         }
     }
 }

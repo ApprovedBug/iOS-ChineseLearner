@@ -40,32 +40,7 @@ extension ResultsView {
 
     private func resultsView(tests: [TestRowViewModel]) -> some View {
         List(tests) { test in
-            Section(header: Text(test.title)
-                        .font(.subheadline)) {
-
-                VStack(alignment: .leading) {
-                    Text("Correct answers")
-                        .font(.headline)
-                        .padding(EdgeInsets(top: 4, leading: 4, bottom: 0, trailing: 0))
-                    ForEach(test.correctAnswers) { answer in
-                        HStack {
-                            WordRowView(viewModel: answer)
-                            Image(systemName: "checkmark.square.fill")
-                        }
-                    }
-                    if test.incorrectAnswers.count > 0 {
-                        Divider()
-                        Text("Incorrect answers")
-                            .font(.headline)
-                        ForEach(test.incorrectAnswers) { answer in
-                            HStack {
-                                WordRowView(viewModel: answer)
-                                Image(systemName: "multiply.square.fill")
-                            }
-                        }
-                    }
-                }
-            }
+            TestRowView(viewModel: test)
         }
     }
 }

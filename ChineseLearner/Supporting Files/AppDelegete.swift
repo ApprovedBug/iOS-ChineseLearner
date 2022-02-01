@@ -10,11 +10,4 @@ import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
-    func applicationWillTerminate(_ application: UIApplication) {
-        PersistenceController.shared.save()
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        PersistenceController.shared.save()
-    }
 }

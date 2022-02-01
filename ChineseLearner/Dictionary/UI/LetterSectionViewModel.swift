@@ -17,3 +17,9 @@ class LetterSectionViewModel: ObservableObject, Identifiable {
         self.words = words
     }
 }
+
+extension LetterSectionViewModel: Equatable {
+    static func == (lhs: LetterSectionViewModel, rhs: LetterSectionViewModel) -> Bool {
+        return lhs.letter == rhs.letter && lhs.words == rhs.words
+    }
+}

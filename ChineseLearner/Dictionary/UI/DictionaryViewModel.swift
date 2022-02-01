@@ -12,12 +12,34 @@ import SwiftUI
 
 class DictionaryViewModel: NSObject, ObservableObject {
 
-    enum State {
+    enum State: Equatable {
+        static func == (lhs: DictionaryViewModel.State, rhs: DictionaryViewModel.State) -> Bool {
+            switch (lhs, rhs) {
+            case (.idle, .idle):
+                return true
+            case (.loading, .loading):
+                return true
+            case (.empty, .empty):
+                return true
+            case (.ready(let lhsResults), .ready(let rhsResults)):
+                return lhsResults == rhsResults
+            case (.failed(let lhsError), .failed(let rhsError)):
+                return lhsError.localizedDescription == rhsError.localizedDescription
+            default:
+                return false
+            }
+        }
+
         case idle
         case loading
         case empty
         case ready([LetterSectionViewModel])
-        case failed(Error)
+        case failed(DictionaryError)
+    }
+
+    enum DictionaryError: Error {
+        case noResults(String)
+        case failedFetch(String)
     }
 
     @Published private(set) var state = State.idle
@@ -41,6 +63,7 @@ class DictionaryViewModel: NSObject, ObservableObject {
         fetchedResultsController.delegate = self
 
         $searchText
+            .dropFirst()
             .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
             .sink(receiveValue: { filter in
                 self.displayFilteredWords()
@@ -58,7 +81,7 @@ extension DictionaryViewModel {
 
             displayFilteredWords()
         } catch {
-            state = .failed(error)
+            state = .failed(.noResults(error.localizedDescription))
         }
     }
 
@@ -84,38 +107,47 @@ extension DictionaryViewModel {
         }
     }
 
-    private func displayFilteredWords() {
+    func displayFilteredWords() {
 
         guard let words = fetchedResultsController.fetchedObjects else {
+            state = .failed(DictionaryError.noResults("display called before fecth"))
             return
         }
 
         wordCount = words.count
 
-        let filterdWords = searchText.isEmpty ? words : words.filter { $0.english.starts(with: searchText) }
+        let filterdWords = searchText.isEmpty ? words : filteredWords(words: words, filter: searchText)
 
-        if words.isEmpty {
+        if filterdWords.isEmpty {
             state = .empty
         } else {
-            var letterSections: [LetterSectionViewModel] = []
-            for word in filterdWords {
-
-                if letterSections.isEmpty || !letterSections.contains(where: { word.english.starts(with: $0.letter) }) {
-
-                    guard let letter = word.english.first else {
-                        continue
-                    }
-
-                    letterSections.append(
-                        LetterSectionViewModel(
-                            letter: String(letter),
-                            words: words.filter({ $0.english.starts(with: String(letter)) }).map(WordRowViewModel.init)
-                        )
-                    )
-                }
-            }
+            let letterSections = createLetterSections(from: filterdWords)
             state = .ready(letterSections)
         }
+    }
+
+    func createLetterSections(from words: [WordMO]) -> [LetterSectionViewModel] {
+        var letterSections: [LetterSectionViewModel] = []
+        for word in words {
+            if letterSections.isEmpty || !letterSections.contains(where: { word.english.starts(with: $0.letter) }) {
+
+                guard let letter = word.english.first else {
+                    continue
+                }
+
+                letterSections.append(
+                    LetterSectionViewModel(
+                        letter: String(letter),
+                        words: words.filter({ $0.english.starts(with: String(letter)) }).map(WordRowViewModel.init)
+                    )
+                )
+            }
+        }
+        return letterSections
+    }
+
+    func filteredWords(words: [WordMO], filter: String) -> [WordMO] {
+        words.filter { $0.english.contains(filter) }
     }
 }
 

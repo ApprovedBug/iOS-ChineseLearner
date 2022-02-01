@@ -17,11 +17,31 @@ struct TestRowView: View {
     }
 
     var body: some View {
-        VStack {
-            Text(viewModel.title)
+        Section(header: Text(viewModel.title)
+                    .font(.subheadline)) {
 
-            List(viewModel.correctAnswers) { answer in
-                WordRowView(viewModel: answer)
+            VStack(alignment: .leading) {
+                Text("Correct answers")
+                    .font(.headline)
+                    .padding(EdgeInsets(top: 4, leading: 4, bottom: 0, trailing: 0))
+                ForEach(viewModel.correctAnswers) { answer in
+                    HStack {
+                        WordRowView(viewModel: answer)
+                        Image(systemName: "checkmark.square.fill")
+                    }
+                }
+                if viewModel.incorrectAnswers.count > 0 {
+                    Divider()
+                    Text("Incorrect answers")
+                        .font(.headline)
+                        .padding(EdgeInsets(top: 4, leading: 4, bottom: 0, trailing: 0))
+                    ForEach(viewModel.incorrectAnswers) { answer in
+                        HStack {
+                            WordRowView(viewModel: answer)
+                            Image(systemName: "multiply.square.fill")
+                        }
+                    }
+                }
             }
         }
     }

@@ -56,7 +56,7 @@ struct AddWordView_Previews: PreviewProvider {
     static var previews: some View {
 
         let viewModel = AddWordViewModel(
-            viewContext: PersistenceController.shared.container.viewContext
+            viewContext: PersistenceController().mainContext
         )
         NavigationView {
             AddWordView(viewModel: viewModel)

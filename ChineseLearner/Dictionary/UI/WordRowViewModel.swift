@@ -33,3 +33,13 @@ class WordRowViewModel: ObservableObject, Identifiable {
     }
 }
 
+extension WordRowViewModel: Equatable {
+    static func == (lhs: WordRowViewModel, rhs: WordRowViewModel) -> Bool {
+        return
+            lhs.id == rhs.id &&
+            lhs.chinese == rhs.chinese &&
+            lhs.pinyin == rhs.pinyin &&
+            lhs.english == rhs.english
+    }
+}
+

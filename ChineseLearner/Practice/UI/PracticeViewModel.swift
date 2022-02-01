@@ -73,9 +73,13 @@ extension PracticeViewModel {
                 return
             }
 
-            randomisedWords = words.shuffled()
+            if words.isEmpty {
+                // TODO: prompt user to adds words to their dictionary
+            } else {
+                randomisedWords = words.shuffled()
 
-            state = .practiceReady(randomisedWords[currentWordIndex].english)
+                state = .practiceReady(randomisedWords[currentWordIndex].english)
+            }
         } catch {
             // error
         }
@@ -118,6 +122,9 @@ extension PracticeViewModel {
 
     func closeSummary() {
         state = .ready
+
+        skippedQuestionIndexes.removeAll()
+        correctAnswerIndexes.removeAll()
     }
 
     private func displayWord(index: Int) {

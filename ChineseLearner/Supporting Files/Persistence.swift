@@ -7,40 +7,70 @@
 
 import CoreData
 
-struct PersistenceController {
-    static let shared = PersistenceController()
+open class PersistenceController {
 
-    let container: NSPersistentContainer
+    public static let modelName = "ChineseLearner"
 
-    init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "ChineseLearner")
-        if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        }
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+    public static let model: NSManagedObjectModel = {
+        let modelURL = Bundle.main.url(forResource: modelName, withExtension: "momd")!
+        return NSManagedObjectModel(contentsOf: modelURL)!
+    }()
 
-                /*
-                Typical reasons for an error here include:
-                * The parent directory does not exist, cannot be created, or disallows writing.
-                * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                * The device is out of space.
-                * The store could not be migrated to the current model version.
-                Check the error message to determine what the actual problem was.
-                */
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
+    public init() {
+
     }
 
-    func save() {
-        do {
-            try self.container.viewContext.save()
-        } catch {
-            fatalError("Unable to save Core Data context")
+    public lazy var mainContext: NSManagedObjectContext = {
+        return self.storeContainer.viewContext
+    }()
+
+    public lazy var storeContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(
+            name: PersistenceController.modelName,
+            managedObjectModel: PersistenceController.model
+        )
+
+        container.loadPersistentStores { _, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
         }
+        return container
+    }()
+
+    public func newDerivededContext() -> NSManagedObjectContext {
+        let context = storeContainer.newBackgroundContext()
+        return context
+    }
+
+    public func saveContext() {
+        saveContext(mainContext)
+    }
+
+    public func saveContext(_ context: NSManagedObjectContext) {
+        if context != mainContext {
+            saveDerivedContext(context)
+            return
+        }
+
+        context.perform {
+            do {
+                try context.save()
+            } catch let error as NSError {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
+    }
+
+    public func saveDerivedContext(_ context: NSManagedObjectContext) {
+        context.perform {
+            do {
+                try context.save()
+            } catch let error as NSError {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
+
+        self.saveContext(self.mainContext)
     }
 }

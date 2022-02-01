@@ -12,7 +12,7 @@ extension TestMO {
 
     static var all: NSFetchRequest<TestMO> {
         let request = TestMO.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "timeStamp", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(key: "timeStamp", ascending: false)]
         return request
     }
 }

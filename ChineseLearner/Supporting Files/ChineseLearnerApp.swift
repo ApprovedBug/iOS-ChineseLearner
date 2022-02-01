@@ -10,14 +10,14 @@ import SwiftUI
 @main
 struct ChineseLearnerApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    let persistenceController = PersistenceController.shared
+    let persistenceController = PersistenceController()
 
     var body: some Scene {
         WindowGroup {
 
-            let dictionaryViewModel = DictionaryViewModel(viewContext: persistenceController.container.viewContext)
-            let practiceViewModel = PracticeViewModel(viewContext: persistenceController.container.viewContext)
-            let resultsViewModel = ResultsViewModel(viewContext: persistenceController.container.viewContext)
+            let dictionaryViewModel = DictionaryViewModel(viewContext: persistenceController.mainContext)
+            let practiceViewModel = PracticeViewModel(viewContext: persistenceController.mainContext)
+            let resultsViewModel = ResultsViewModel(viewContext: persistenceController.mainContext)
 
             TabView {
                 DictionaryView(viewModel: dictionaryViewModel)

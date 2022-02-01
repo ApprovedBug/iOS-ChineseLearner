@@ -32,6 +32,7 @@ struct ResultsView: View {
                 }
             }
             .navigationBarTitle("Results")
+            .listStyle(.insetGrouped)
         }
     }
 }

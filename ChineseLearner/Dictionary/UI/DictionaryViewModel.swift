@@ -114,13 +114,13 @@ extension DictionaryViewModel {
             return
         }
 
-        wordCount = words.count
-
-        let filterdWords = searchText.isEmpty ? words : filteredWords(words: words, filter: searchText)
-
-        if filterdWords.isEmpty {
+        if words.isEmpty {
             state = .empty
         } else {
+            wordCount = words.count
+
+            let filterdWords = searchText.isEmpty ? words : filteredWords(words: words, filter: searchText.lowercased())
+
             let letterSections = createLetterSections(from: filterdWords)
             state = .ready(letterSections)
         }
@@ -147,7 +147,7 @@ extension DictionaryViewModel {
     }
 
     func filteredWords(words: [WordMO], filter: String) -> [WordMO] {
-        words.filter { $0.english.contains(filter) }
+        words.filter { $0.english.lowercased().contains(filter) }
     }
 }
 

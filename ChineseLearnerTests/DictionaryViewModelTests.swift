@@ -75,7 +75,7 @@ class DictionaryViewModelTests: XCTestCase {
 
         viewModel.fetchWords()
 
-        XCTAssertEqual(viewModel.state, .empty)
+        XCTAssertEqual(viewModel.state, .ready([]))
     }
 
     func testCreateLetterSections_oneSection_oneWord() throws {

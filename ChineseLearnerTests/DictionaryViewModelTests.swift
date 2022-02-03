@@ -12,11 +12,11 @@ import XCTest
 class DictionaryViewModelTests: XCTestCase {
 
     let viewContext = TestPersistenceController().mainContext
-    var viewModel: DictionaryViewModel!
+    var viewModel: DictionaryViewModelMock!
 
     override func setUp() {
 
-        viewModel = DictionaryViewModel(viewContext: viewContext)
+        viewModel = DictionaryViewModelMock(viewContext: viewContext)
     }
 
     func testInit() {
@@ -219,5 +219,22 @@ class DictionaryViewModelTests: XCTestCase {
         fetchResultsCount = try viewContext.count(for: request)
 
         XCTAssertEqual(fetchResultsCount, 0)
+    }
+
+    func testDisplayResultsCalledWhenSearchTextChanged() {
+
+        XCTAssertEqual(viewModel.searchText, "")
+        XCTAssertFalse(viewModel.isDisplayFilteredWordsCalled)
+
+        viewModel.searchText = "first search"
+
+        let expectation = expectation(description: "Listen for display results called")
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            if self.viewModel.isDisplayFilteredWordsCalled {
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 1.5)
     }
 }

@@ -34,6 +34,7 @@
 		71E73EA727A2B96F00EBB5BC /* AddWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E73EA627A2B96F00EBB5BC /* AddWordView.swift */; };
 		71E73EA927A2B98000EBB5BC /* AddWordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E73EA827A2B98000EBB5BC /* AddWordViewModel.swift */; };
 		71E73EAC27A2BD8300EBB5BC /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E73EAB27A2BD8300EBB5BC /* View+Extensions.swift */; };
+		71EAE33627ABDBE800A22584 /* DictionaryViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EAE33527ABDBE800A22584 /* DictionaryViewModelMock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		71E73EA627A2B96F00EBB5BC /* AddWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWordView.swift; sourceTree = "<group>"; };
 		71E73EA827A2B98000EBB5BC /* AddWordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWordViewModel.swift; sourceTree = "<group>"; };
 		71E73EAB27A2BD8300EBB5BC /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
+		71EAE33527ABDBE800A22584 /* DictionaryViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryViewModelMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +203,7 @@
 		71E73E7D27A195BF00EBB5BC /* ChineseLearnerTests */ = {
 			isa = PBXGroup;
 			children = (
+				71EAE33527ABDBE800A22584 /* DictionaryViewModelMock.swift */,
 				715FF64727A93D2100B53D61 /* DictionaryViewModelTests.swift */,
 				715FF64927A94BE000B53D61 /* TestPersistence.swift */,
 			);
@@ -434,6 +437,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				715FF64827A93D2200B53D61 /* DictionaryViewModelTests.swift in Sources */,
+				71EAE33627ABDBE800A22584 /* DictionaryViewModelMock.swift in Sources */,
 				715FF64A27A94BE000B53D61 /* TestPersistence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -28,7 +28,7 @@ struct ResultsView: View {
                 case .ready(let tests):
                     resultsView(tests: tests)
                 case .empty:
-                    Text("Go do your first test to see your results here!")
+                    emptyView
                 }
             }
             .navigationBarTitle("Results")
@@ -38,6 +38,23 @@ struct ResultsView: View {
 }
 
 extension ResultsView {
+
+    private var emptyView: some View {
+        VStack(alignment: .leading) {
+            Text("Welcome to your progress tracker\n\nThis section contains a record of all your test results, so you can track your language learning progress.")
+                .padding(.bottom, 32)
+            Button(action: viewModel.takeTest) {
+                HStack {
+                    Spacer()
+                    Text("Take a test")
+                    Spacer()
+                }
+            }
+            .buttonStyle(LightGreyButtonStyle())
+            Spacer()
+        }
+        .padding()
+    }
 
     private func resultsView(tests: [TestRowViewModel]) -> some View {
         List(tests) { test in

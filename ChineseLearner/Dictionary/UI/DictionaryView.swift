@@ -27,7 +27,7 @@ struct DictionaryView: View {
                 case .ready(let letterSections):
                     loadedView(letterSections: letterSections)
                 case .empty:
-                    Text("Add some words to your dictionary!")
+                    emptyView
                 case .failed(let error):
                     Text("Error loading content - \(error.localizedDescription)")
                 }
@@ -57,9 +57,29 @@ struct DictionaryView: View {
 }
 
 extension DictionaryView {
+
+    private var emptyView: some View {
+
+        VStack(alignment: .leading) {
+            Text("Welcome to your dictionary!\n\nThis section contains all the words in your vocabulary that you would like to memorise. Tap the add button to get started!")
+                .padding(.bottom, 32)
+            Button(action: viewModel.addTapped) {
+                HStack {
+                    Spacer()
+                    Text("Add word")
+                    Spacer()
+                }
+            }
+            .buttonStyle(LightGreyButtonStyle())
+            Spacer()
+        }
+        .padding()
+    }
+
+
     private func loadedView(letterSections: [LetterSectionViewModel]) -> some View {
         VStack(alignment: .leading) {
-            Text("\(viewModel.wordCount) words")
+            Text(viewModel.resultsCount)
                 .padding(EdgeInsets(top: 0, leading: 18, bottom: 0, trailing: 0))
                 .foregroundColor(Color(red: 0.5, green: 0.5, blue: 0.5))
                 .font(.footnote)

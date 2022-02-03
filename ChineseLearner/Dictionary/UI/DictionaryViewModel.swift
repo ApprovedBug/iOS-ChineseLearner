@@ -45,7 +45,7 @@ class DictionaryViewModel: NSObject, ObservableObject {
     @Published private(set) var state = State.idle
     @Published var isShowingSheet = false
     @Published var searchText: String = ""
-    @Published var wordCount: Int = 0
+    @Published var resultsCount: String = ""
 
     private(set) var viewContext: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<WordMO>
@@ -107,7 +107,8 @@ extension DictionaryViewModel {
         }
     }
 
-    func displayFilteredWords() {
+    @objc
+    open func displayFilteredWords() {
 
         guard let words = fetchedResultsController.fetchedObjects else {
             state = .failed(DictionaryError.noResults("display called before fecth"))
@@ -117,9 +118,9 @@ extension DictionaryViewModel {
         if words.isEmpty {
             state = .empty
         } else {
-            wordCount = words.count
-
             let filterdWords = searchText.isEmpty ? words : filteredWords(words: words, filter: searchText.lowercased())
+
+            resultsCount = filterdWords.count == 1 ? "1 word" : "\(filterdWords.count) words"
 
             let letterSections = createLetterSections(from: filterdWords)
             state = .ready(letterSections)

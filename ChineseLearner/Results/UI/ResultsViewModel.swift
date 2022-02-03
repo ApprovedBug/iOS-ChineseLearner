@@ -57,6 +57,10 @@ extension ResultsViewModel {
             state = .empty
         }
     }
+
+    func takeTest() {
+        
+    }
 }
 
 extension ResultsViewModel: NSFetchedResultsControllerDelegate {

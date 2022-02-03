@@ -10,4 +10,13 @@ import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
+    var persistenceController: PersistenceController?
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        persistenceController?.saveContext()
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        persistenceController?.saveContext()
+    }
 }

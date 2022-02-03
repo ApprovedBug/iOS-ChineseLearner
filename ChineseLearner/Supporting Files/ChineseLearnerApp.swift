@@ -13,7 +13,10 @@ struct ChineseLearnerApp: App {
     let persistenceController = PersistenceController()
 
     var body: some Scene {
-        WindowGroup {
+
+        appDelegate.persistenceController = persistenceController
+        
+        return WindowGroup {
 
             let dictionaryViewModel = DictionaryViewModel(viewContext: persistenceController.mainContext)
             let practiceViewModel = PracticeViewModel(viewContext: persistenceController.mainContext)

@@ -20,18 +20,24 @@ struct AddWordView: View {
     var body: some View {
 
         VStack {
-            Form {
-                TextField("Chinese", text: $viewModel.chinese)
-                TextField("Pinyin", text: $viewModel.pinyin)
-                TextField("English", text: $viewModel.english)
-                    .autocapitalization(.none)
+            TextField("Chinese", text: $viewModel.chinese)
+                .textFieldStyle(.roundedBorder)
+            TextField("Pinyin", text: $viewModel.pinyin)
+                .textFieldStyle(.roundedBorder)
+            TextField("English", text: $viewModel.english)
+                .textFieldStyle(.roundedBorder)
+                .autocapitalization(.none)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
 
-                Button("Add word") {
-                    viewModel.add()
+            Button(action: viewModel.add) {
+                HStack {
+                    Spacer()
+                    Text("Add")
+                    Spacer()
                 }
-                .centerHorizontally()
-                .navigationTitle("Add new word")
             }
+            .navigationTitle("Add new word")
+            .buttonStyle(LightGreyButtonStyle())
             .alert(isPresented: .constant(viewModel.state == .error)) {
                 Alert(title: Text("Error"),
                     message: Text("Please fill in all fields"),
@@ -47,7 +53,9 @@ struct AddWordView: View {
                     dismiss()
                 }
             }
+            Spacer()
         }
+        .padding()
     }
 }
 

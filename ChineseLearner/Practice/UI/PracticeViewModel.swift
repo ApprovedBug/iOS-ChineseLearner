@@ -109,15 +109,19 @@ extension PracticeViewModel {
 
         currentWordIndex = 0
 
-        saveTestResult()
+        if skippedQuestionIndexes.isEmpty && correctAnswerIndexes.isEmpty {
+            state = .ready
+        } else {
+            saveTestResult()
+
+            state = .summary(correctAnswerIndexes.count, skippedQuestionIndexes.count)
+        }
 
         guard let words = fetchedResultsController.fetchedObjects else {
             return
         }
 
         randomisedWords = words.shuffled()
-
-        state = .summary(correctAnswerIndexes.count, skippedQuestionIndexes.count)
     }
 
     func closeSummary() {

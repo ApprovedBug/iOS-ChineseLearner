@@ -48,6 +48,29 @@ open class PersistenceController {
     }
 
     public func saveContext(_ context: NSManagedObjectContext) {
+
+        if !context.hasChanges {
+            return
+        }
+
+        if context != mainContext {
+            saveDerivedContext(context)
+            return
+        }
+
+        do {
+            try context.save()
+        } catch let error as NSError {
+            fatalError("Unresolved error \(error), \(error.userInfo)")
+        }
+    }
+
+    public func saveContextAsync(_ context: NSManagedObjectContext) {
+
+        if !context.hasChanges {
+            return
+        }
+
         if context != mainContext {
             saveDerivedContext(context)
             return

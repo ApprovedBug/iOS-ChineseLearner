@@ -49,7 +49,7 @@ extension PracticeView {
                     Spacer()
                 }
             }
-            .buttonStyle(DarkGreyButtonStyle())
+            .buttonStyle(LightGreyButtonStyle())
             Spacer()
         }
         .padding()

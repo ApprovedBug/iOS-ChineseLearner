@@ -11,12 +11,12 @@ import XCTest
 
 class DictionaryViewModelTests: XCTestCase {
 
-    let viewContext = TestPersistenceController().mainContext
+    let persistenceController = TestPersistenceController()
     var viewModel: DictionaryViewModelMock!
 
     override func setUp() {
 
-        viewModel = DictionaryViewModelMock(viewContext: viewContext)
+        viewModel = DictionaryViewModelMock(persistenceController: persistenceController)
     }
 
     func testInit() {
@@ -31,7 +31,7 @@ class DictionaryViewModelTests: XCTestCase {
     }
 
     func testFetchWords_withResults() {
-        let word = WordMO(context: viewContext)
+        let word = WordMO(context: persistenceController.mainContext)
 
         viewModel.fetchWords()
 
@@ -41,12 +41,12 @@ class DictionaryViewModelTests: XCTestCase {
     }
 
     func testFetchWords_withFilter_results() {
-        let firstWord = WordMO(context: viewContext)
+        let firstWord = WordMO(context: persistenceController.mainContext)
         firstWord.english = "english"
         firstWord.pinyin = "pinyin"
         firstWord.chinese = "chinese"
 
-        let secondWord = WordMO(context: viewContext)
+        let secondWord = WordMO(context: persistenceController.mainContext)
         secondWord.english = "foo"
         secondWord.pinyin = "bar"
         secondWord.chinese = "chinese"
@@ -61,12 +61,12 @@ class DictionaryViewModelTests: XCTestCase {
     }
 
     func testFetchWords_withFilter_noResults() {
-        let firstWord = WordMO(context: viewContext)
+        let firstWord = WordMO(context: persistenceController.mainContext)
         firstWord.english = "english"
         firstWord.pinyin = "pinyin"
         firstWord.chinese = "chinese"
 
-        let secondWord = WordMO(context: viewContext)
+        let secondWord = WordMO(context: persistenceController.mainContext)
         secondWord.english = "foo"
         secondWord.pinyin = "bar"
         secondWord.chinese = "chinese"
@@ -80,7 +80,7 @@ class DictionaryViewModelTests: XCTestCase {
 
     func testCreateLetterSections_oneSection_oneWord() throws {
 
-        let word = WordMO(context: viewContext)
+        let word = WordMO(context: persistenceController.mainContext)
         word.english = "english"
         word.pinyin = "pinyin"
         word.chinese = "chinese"
@@ -102,7 +102,7 @@ class DictionaryViewModelTests: XCTestCase {
 
     func testCreateLetterSections_oneSection_twoWords() throws {
 
-        let word = WordMO(context: viewContext)
+        let word = WordMO(context: persistenceController.mainContext)
         word.english = "english"
         word.pinyin = "pinyin"
         word.chinese = "chinese"
@@ -124,12 +124,12 @@ class DictionaryViewModelTests: XCTestCase {
 
     func testCreateLetterSections_twoSections_twoWords() throws {
 
-        let firstWord = WordMO(context: viewContext)
+        let firstWord = WordMO(context: persistenceController.mainContext)
         firstWord.english = "english"
         firstWord.pinyin = "pinyin"
         firstWord.chinese = "chinese"
 
-        let secondWord = WordMO(context: viewContext)
+        let secondWord = WordMO(context: persistenceController.mainContext)
         secondWord.english = "hello"
         secondWord.pinyin = "nihao"
         secondWord.chinese = "你好"
@@ -160,12 +160,12 @@ class DictionaryViewModelTests: XCTestCase {
     }
 
     func testFilterWords() throws {
-        let firstWord = WordMO(context: viewContext)
+        let firstWord = WordMO(context: persistenceController.mainContext)
         firstWord.english = "english"
         firstWord.pinyin = "pinyin"
         firstWord.chinese = "chinese"
 
-        let secondWord = WordMO(context: viewContext)
+        let secondWord = WordMO(context: persistenceController.mainContext)
         secondWord.english = "foo"
         secondWord.pinyin = "bar"
         secondWord.chinese = "chinese"
@@ -199,16 +199,16 @@ class DictionaryViewModelTests: XCTestCase {
         let request = WordMO.fetchRequest()
         request.sortDescriptors = []
 
-        var fetchResultsCount = try viewContext.count(for: request)
+        var fetchResultsCount = try persistenceController.mainContext.count(for: request)
 
         XCTAssertEqual(fetchResultsCount, 0)
 
-        let word = WordMO(context: viewContext)
+        let word = WordMO(context: persistenceController.mainContext)
         word.english = "english"
         word.pinyin = "pinyin"
         word.chinese = "chinese"
 
-        fetchResultsCount = try viewContext.count(for: request)
+        fetchResultsCount = try persistenceController.mainContext.count(for: request)
 
         XCTAssertEqual(fetchResultsCount, 1)
 
@@ -216,7 +216,7 @@ class DictionaryViewModelTests: XCTestCase {
 
         viewModel.delete(from: letterSection, at: IndexSet(integer: 0))
 
-        fetchResultsCount = try viewContext.count(for: request)
+        fetchResultsCount = try persistenceController.mainContext.count(for: request)
 
         XCTAssertEqual(fetchResultsCount, 0)
     }

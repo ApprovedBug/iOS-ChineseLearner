@@ -18,9 +18,9 @@ struct ChineseLearnerApp: App {
         
         return WindowGroup {
 
-            let dictionaryViewModel = DictionaryViewModel(viewContext: persistenceController.mainContext)
-            let practiceViewModel = PracticeViewModel(viewContext: persistenceController.mainContext)
-            let resultsViewModel = ResultsViewModel(viewContext: persistenceController.mainContext)
+            let dictionaryViewModel = DictionaryViewModel(persistenceController: persistenceController)
+            let practiceViewModel = PracticeViewModel(persistenceController: persistenceController)
+            let resultsViewModel = ResultsViewModel(persistenceController: persistenceController)
 
             TabView {
                 DictionaryView(viewModel: dictionaryViewModel)

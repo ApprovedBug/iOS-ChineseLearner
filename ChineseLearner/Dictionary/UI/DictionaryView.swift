@@ -47,7 +47,7 @@ struct DictionaryView: View {
                 NavigationView {
                     AddWordView(
                         viewModel: AddWordViewModel(
-                            viewContext: viewModel.viewContext
+                            persistenceController: viewModel.persistenceController
                         )
                     )
                 }

@@ -25,19 +25,19 @@ class PracticeViewModel: NSObject, ObservableObject {
     @Published var pinyinAnswer: String = ""
     @Published private var currentWordIndex: Int = 0
 
-    private var viewContext: NSManagedObjectContext
+    private var persistenceController: Persisting
     private let fetchedResultsController: NSFetchedResultsController<WordMO>
     private var randomisedWords: [WordMO] = []
     private var disposables = Set<AnyCancellable>()
     private var correctAnswerIndexes: [Int] = []
     private var skippedQuestionIndexes: [Int] = []
 
-    init(viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
+    init(persistenceController: Persisting) {
+        self.persistenceController = persistenceController
 
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: WordMO.all,
-            managedObjectContext: viewContext,
+            managedObjectContext: persistenceController.mainContext,
             sectionNameKeyPath: nil,
             cacheName: nil)
 
@@ -141,20 +141,20 @@ extension PracticeViewModel {
         var answers: [AnswerMO] = []
 
         for index in correctAnswerIndexes {
-            let answer = AnswerMO(context: viewContext)
+            let answer = AnswerMO(context: persistenceController.mainContext)
             answer.word = randomisedWords[index]
             answer.isCorrect = true
             answers.append(answer)
         }
 
         for index in skippedQuestionIndexes {
-            let answer = AnswerMO(context: viewContext)
+            let answer = AnswerMO(context: persistenceController.mainContext)
             answer.word = randomisedWords[index]
             answer.isCorrect = false
             answers.append(answer)
         }
 
-        let test = TestMO(context: viewContext)
+        let test = TestMO(context: persistenceController.mainContext)
         test.addToAnswers(NSSet(array: answers))
         test.timeStamp = Date()
     }

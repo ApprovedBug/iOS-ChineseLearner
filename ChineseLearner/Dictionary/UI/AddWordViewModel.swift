@@ -21,10 +21,10 @@ class AddWordViewModel: ObservableObject {
     @Published var pinyin: String = ""
     @Published var english: String = ""
 
-    private var viewContext: NSManagedObjectContext
+    private var persistenceController: Persisting
 
-    init(viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
+    init(persistenceController: Persisting) {
+        self.persistenceController = persistenceController
     }
 }
 
@@ -37,10 +37,12 @@ extension AddWordViewModel {
             return
         }
 
-        let word = WordMO(context: viewContext)
+        let word = WordMO(context: persistenceController.mainContext)
         word.chinese = chinese
         word.pinyin = pinyin
         word.english = english
+        
+        persistenceController.saveContext()
 
         state = .complete
     }

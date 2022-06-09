@@ -7,7 +7,14 @@
 
 import CoreData
 
-open class PersistenceController {
+protocol Persisting {
+    
+    var mainContext: NSManagedObjectContext { get }
+    
+    func saveContext()
+}
+
+open class PersistenceController: Persisting {
 
     public static let modelName = "ChineseLearner"
 
@@ -17,7 +24,11 @@ open class PersistenceController {
     }()
 
     public init() {
-
+        storeContainer.loadPersistentStores { _, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
     }
 
     public lazy var mainContext: NSManagedObjectContext = {
@@ -29,12 +40,6 @@ open class PersistenceController {
             name: PersistenceController.modelName,
             managedObjectModel: PersistenceController.model
         )
-
-        container.loadPersistentStores { _, error in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        }
         return container
     }()
 

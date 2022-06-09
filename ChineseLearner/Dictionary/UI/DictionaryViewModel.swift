@@ -47,16 +47,16 @@ class DictionaryViewModel: NSObject, ObservableObject {
     @Published var searchText: String = ""
     @Published var resultsCount: String = ""
 
-    private(set) var viewContext: NSManagedObjectContext
+    private(set) var persistenceController: Persisting
     private let fetchedResultsController: NSFetchedResultsController<WordMO>
     private var disposables = Set<AnyCancellable>()
 
-    init(viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
+    init(persistenceController: Persisting) {
+        self.persistenceController = persistenceController
 
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: WordMO.all,
-            managedObjectContext: viewContext,
+            managedObjectContext: persistenceController.mainContext,
             sectionNameKeyPath: nil,
             cacheName: nil)
         super.init()
@@ -96,11 +96,11 @@ extension DictionaryViewModel {
             let word = section.words[index]
 
             do {
-                guard let wordToDelete = try viewContext.existingObject(with: word.id) as? WordMO else {
+                guard let wordToDelete = try persistenceController.mainContext.existingObject(with: word.id) as? WordMO else {
                     return
                 }
 
-                viewContext.delete(wordToDelete)
+                persistenceController.mainContext.delete(wordToDelete)
             } catch {
 
             }

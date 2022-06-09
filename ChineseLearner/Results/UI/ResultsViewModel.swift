@@ -18,14 +18,14 @@ class ResultsViewModel: NSObject, ObservableObject {
 
     @Published var state: State = .loading
 
-    private(set) var viewContext: NSManagedObjectContext
+    private(set) var persistenceController: Persisting
     private var fetchedResultsController: NSFetchedResultsController<TestMO>
 
-    init(viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
+    init(persistenceController: Persisting) {
+        self.persistenceController = persistenceController
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: TestMO.all,
-            managedObjectContext: viewContext,
+            managedObjectContext: persistenceController.mainContext,
             sectionNameKeyPath: nil,
             cacheName: nil)
         super.init()
